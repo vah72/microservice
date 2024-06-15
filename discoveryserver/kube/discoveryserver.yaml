@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discoveryserver
+  labels:
+    app: discoveryserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discoveryserver
+  template:
+    metadata:
+      labels:
+        app: discoveryserver
+    spec:
+      containers:
+        - name: discoveryserver
+          image: discoveryserver-app
+          ports:
+            - containerPort: 7080
+          imagePullPolicy: Always
+
+---
+# microservice.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: discoveryserver
+spec:
+  selector:
+    app: discoveryserver
+  ports:
+    - port : 7080
+      targetPort: 7080
+      protocol: TCP
+  type: LoadBalancer
